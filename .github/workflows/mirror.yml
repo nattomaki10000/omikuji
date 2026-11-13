@@ -1,0 +1,22 @@
+name: Mirror to Organization
+
+on:
+  push:
+    branches:
+      - '**' # すべてのブランチのプッシュを検知
+  delete: # ブランチやタグの削除も同期
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 全履歴を取得
+
+      - name: Mirror push to target repo
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        run: |
+          git push --mirror https://x-access-token:${MIRROR_TOKEN}@github.com/akn-pc-club/omikuji.git
